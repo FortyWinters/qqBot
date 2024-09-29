@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"qqbot/mh"
+	"qqbot/api"
 
 	"github.com/tencent-connect/botgo/dto"
 	"github.com/tencent-connect/botgo/dto/message"
@@ -30,21 +30,21 @@ func (p Processor) ProcessMessage(input string, data *dto.WSATMessageData) error
 
 	switch cmd.Cmd {
 	case "/怪物":
-		info, err = mh.GetMonsterInfo(cmd.Content)
+		info, err = api.GetMonsterInfo(cmd.Content)
 		if err != nil {
 			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
 		} else {
 			toCreate.Content = info
 		}
 	case "/武器":
-		info, err = mh.GetWeaponInfo(cmd.Content)
+		info, err = api.GetWeaponInfo(cmd.Content)
 		if err != nil {
 			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
 		} else {
 			toCreate.Content = info
 		}
 	case "/装备":
-		info, err = mh.GetEquipmentInfo(cmd.Content)
+		info, err = api.GetEquipmentInfo(cmd.Content)
 		if err != nil {
 			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
 		} else {

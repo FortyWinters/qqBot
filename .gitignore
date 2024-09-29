@@ -27,3 +27,5 @@ go.work.sum
 qqbot
 
 **/.DS_Store
+
+monster_hunter.db
