@@ -10,6 +10,12 @@ import (
 	"github.com/tencent-connect/botgo/openapi"
 )
 
+const (
+	WORLD = 0
+	RISE  = 1
+	WILD  = 2
+)
+
 type Processor struct {
 	api openapi.OpenAPI
 }
@@ -29,22 +35,43 @@ func (p Processor) ProcessMessage(input string, data *dto.WSATMessageData) error
 	var err error
 
 	switch cmd.Cmd {
-	case "/怪物":
-		info, err = api.GetMonsterInfo(cmd.Content)
+	case "/世界怪物":
+		info, err = api.GetMonsterInfo(cmd.Content, WORLD)
 		if err != nil {
 			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
 		} else {
 			toCreate.Content = info
 		}
-	case "/武器":
-		info, err = api.GetWeaponInfo(cmd.Content)
+	case "/世界装备":
+		info, err = api.GetEquipmentInfo(cmd.Content, WORLD)
 		if err != nil {
 			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
 		} else {
 			toCreate.Content = info
 		}
-	case "/装备":
-		info, err = api.GetEquipmentInfo(cmd.Content)
+	case "/崛起怪物":
+		info, err = api.GetMonsterInfo(cmd.Content, RISE)
+		if err != nil {
+			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
+		} else {
+			toCreate.Content = info
+		}
+	case "/崛起装备":
+		info, err = api.GetEquipmentInfo(cmd.Content, RISE)
+		if err != nil {
+			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
+		} else {
+			toCreate.Content = info
+		}
+	case "/荒野怪物":
+		info, err = api.GetMonsterInfo(cmd.Content, WILD)
+		if err != nil {
+			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
+		} else {
+			toCreate.Content = info
+		}
+	case "/荒野装备":
+		info, err = api.GetEquipmentInfo(cmd.Content, WILD)
 		if err != nil {
 			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
 		} else {

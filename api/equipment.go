@@ -5,9 +5,9 @@ import (
 	"fmt"
 )
 
-func GetEquipmentInfo(name string) (string, error) {
+func GetEquipmentInfo(name string, game int) (string, error) {
 	if name == "" {
 		return "", errors.New("需要装备名称")
 	}
-	return fmt.Sprintf("%s的面板", name), nil
+	return fmt.Sprintf("%s的信息", name), nil
 }
