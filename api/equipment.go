@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func GetEquipmentInfo(name string, game int) (string, error) {
+func GetEquipmentInfoHandler(name string, game int) (string, error) {
 	if name == "" {
 		return "", errors.New("需要装备名称")
 	}
