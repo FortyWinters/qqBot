@@ -15,14 +15,14 @@ var (
 	MATERIAL_GET_API = "/material/get"
 )
 
-func GetMonsterInfoHandler(argStr string, game_type int) (string, error) {
+func GetMonsterInfoHandler(argStr string, game_type int) (MonsterResJson, error) {
 	if argStr == "" {
-		return "", errors.New("需要怪物名称")
+		return MonsterResJson{Info: "", Img: ""}, errors.New("需要怪物名称")
 	}
 
 	url := SERVER_URL
 	argv := strings.Split(argStr, " ")
-	payload := MonsterRequestJson{
+	payload := MonsterReqJson{
 		Name:     argv[0],
 		GameType: game_type,
 	}
@@ -42,51 +42,56 @@ func GetMonsterInfoHandler(argStr string, game_type int) (string, error) {
 			apiUrl = MATERIAL_GET_API
 			errorMessage = "素材查询失败"
 		default:
-			return "参数错误", nil
+			return MonsterResJson{Info: "参数错误", Img: ""}, nil
 		}
 	}
 
 	url += apiUrl
 	monsterInfo, err := SendGetRequest(url, payload)
 	if err != nil {
-		return "", errors.New("internal error")
+		return MonsterResJson{Info: "", Img: ""}, errors.New("internal error")
 	}
 	if monsterInfo == "Internal server error" {
-		return errorMessage, nil
+		return MonsterResJson{Info: errorMessage, Img: ""}, nil
 	}
 
+	var info, img string
+
 	if len(argv) == 1 {
-		return monsterInfoResult(monsterInfo), nil
+		info, img = monsterInfoResult(monsterInfo)
+		return MonsterResJson{Info: info, Img: img}, nil
 	} else if len(argv) == 1 {
 		switch argv[1] {
 		case "弱点":
-			return monsterPartResult(monsterInfo), nil
+			info, img = monsterPartResult(monsterInfo)
+			return MonsterResJson{Info: info, Img: img}, nil
 		case "素材", "掉落":
-			return monsterMaterialResult(monsterInfo), nil
+			info, img = monsterMaterialResult(monsterInfo)
+			return MonsterResJson{Info: info, Img: img}, nil
 		default:
-			return "", nil
+			return MonsterResJson{Info: info, Img: img}, nil
 		}
 	}
 
-	return "", nil
+	return MonsterResJson{Info: "", Img: ""}, nil
 }
 
-func monsterInfoResult(monsterInfoStr string) string {
+func monsterInfoResult(monsterInfoStr string) (string, string) {
 	var monsterInfo MonsterInfo
 
 	err := json.Unmarshal([]byte(monsterInfoStr), &monsterInfo)
 	if err != nil {
 		log.Println("Error unmarshalling JSON:", err)
-		return ""
+		return "", ""
 	}
 
-	return fmt.Sprintf("%s\n%s", monsterInfo.MonsterName, monsterInfo.MonsterDescription)
+	return fmt.Sprintf("%s\n%s", monsterInfo.MonsterName, monsterInfo.MonsterDescription), monsterInfo.MonsterIconUrl
 }
 
-func monsterPartResult(monsterInfoStr string) string {
-	return monsterInfoStr
+func monsterPartResult(monsterInfoStr string) (string, string) {
+	return monsterInfoStr, ""
 }
 
-func monsterMaterialResult(monsterInfoStr string) string {
-	return monsterInfoStr
+func monsterMaterialResult(monsterInfoStr string) (string, string) {
+	return monsterInfoStr, ""
 }

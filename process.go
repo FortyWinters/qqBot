@@ -36,18 +36,21 @@ func (p Processor) ProcessMessage(input string, data *dto.WSATMessageData) error
 			MessageID:             data.ID,
 			IgnoreGetMessageError: true,
 		},
+		Image: "",
 	}
 
-	var info string
+	var res api.MonsterResJson
 	var err error
+	var info string
 
 	switch cmd.Cmd {
 	case "/世界怪物":
-		info, err = api.GetMonsterInfoHandler(cmd.Content, WORLD)
+		res, err = api.GetMonsterInfoHandler(cmd.Content, WORLD)
 		if err != nil {
 			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
 		} else {
-			toCreate.Content = info
+			toCreate.Content = res.Info
+			toCreate.Image = res.Img
 		}
 	case "/世界装备":
 		info, err = api.GetEquipmentInfoHandler(cmd.Content, WORLD)
@@ -57,11 +60,12 @@ func (p Processor) ProcessMessage(input string, data *dto.WSATMessageData) error
 			toCreate.Content = info
 		}
 	case "/崛起怪物":
-		info, err = api.GetMonsterInfoHandler(cmd.Content, RISE)
+		res, err = api.GetMonsterInfoHandler(cmd.Content, RISE)
 		if err != nil {
 			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
 		} else {
-			toCreate.Content = info
+			toCreate.Content = res.Info
+			toCreate.Image = res.Img
 		}
 	case "/崛起装备":
 		info, err = api.GetEquipmentInfoHandler(cmd.Content, RISE)
@@ -71,11 +75,12 @@ func (p Processor) ProcessMessage(input string, data *dto.WSATMessageData) error
 			toCreate.Content = info
 		}
 	case "/荒野怪物":
-		info, err = api.GetMonsterInfoHandler(cmd.Content, WILD)
+		res, err = api.GetMonsterInfoHandler(cmd.Content, WILD)
 		if err != nil {
 			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
 		} else {
-			toCreate.Content = info
+			toCreate.Content = res.Info
+			toCreate.Image = res.Img
 		}
 	case "/荒野装备":
 		info, err = api.GetEquipmentInfoHandler(cmd.Content, WILD)

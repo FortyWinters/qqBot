@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func SendGetRequest(url string, payload MonsterRequestJson) (string, error) {
+func SendGetRequest(url string, payload MonsterReqJson) (string, error) {
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
 		return "", fmt.Errorf("failed to marshal request payload: %v", err)
