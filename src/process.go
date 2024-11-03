@@ -90,8 +90,14 @@ func (p Processor) ProcessMessage(input string, data *dto.WSATMessageData) error
 			toCreate.Content = info
 		}
 	default:
-		toCreate.Content = "指令不存在"
+		gptRes, err := api.GPTHandler(cmd.Cmd)
+		if err != nil {
+			toCreate.Content = fmt.Sprintf("参数错误: %v", err)
+		} else {
+			toCreate.Content = gptRes
+		}
 	}
+
 	p.sendReply(ctx, data.ChannelID, toCreate)
 
 	return nil
